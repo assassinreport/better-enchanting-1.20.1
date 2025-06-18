@@ -1,0 +1,40 @@
+{
+	"schemaVersion": 1,
+	"id": "betterenchanting",
+	"version": "${version}",
+	"name": "Better Enchanting",
+	"description": "Enhances the enchanting system",
+	"authors": [
+		"assassinreport"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/betterenchanting/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+          "net.assassinreport.betterenchanting.BetterEnchanting"
+		],
+		"fabric-datagen": [
+          "net.assassinreport.betterenchanting.BetterEnchantingDataGenerator"
+		],
+		"client": [
+          "net.assassinreport.betterenchanting.BetterEnchantingClient"
+		]
+	},
+	"mixins": [
+		"better-enchanting.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

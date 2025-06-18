@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "betterenchanting:block/new_enchanting_table"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "betterenchanting:block/new_template_chiseled_bookshelf_slot_bottom_mid",
+  "textures": {
+    "texture": "betterenchanting:block/new_chiseled_bookshelf_empty"
+  }
+}
