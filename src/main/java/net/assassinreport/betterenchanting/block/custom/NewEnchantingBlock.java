@@ -53,7 +53,6 @@ public class NewEnchantingBlock extends BlockWithEntity implements BlockEntityPr
         }
     }
 
-
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {

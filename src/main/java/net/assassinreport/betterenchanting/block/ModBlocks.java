@@ -16,7 +16,7 @@ import net.minecraft.util.Identifier;
 public class ModBlocks {
 
     public static final Block NEW_ENCHANTING_BLOCK = registerBlock("new_enchanting_table",
-            new NewEnchantingBlock(FabricBlockSettings.copyOf(Blocks.OBSIDIAN).nonOpaque()));
+            new NewEnchantingBlock(FabricBlockSettings.copyOf(Blocks.STONE).nonOpaque().requiresTool()));
 
     public static final Block NEW_CHISELED_BOOKSHELF_BLOCK= registerBlock("new_chiseled_bookshelf",
             new NewChiseledBookshelfBlock(FabricBlockSettings.copyOf(Blocks.CHISELED_BOOKSHELF).nonOpaque()));
