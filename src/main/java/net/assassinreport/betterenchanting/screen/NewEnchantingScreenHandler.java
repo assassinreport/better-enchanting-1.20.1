@@ -103,21 +103,30 @@ public class NewEnchantingScreenHandler extends ScreenHandler {
         ItemStack inputStack = this.getSlot(0).getStack();
         if (inputStack.isEmpty()) return;
 
-        if (hasEnchantment(inputStack, enchantment, level)) return; // Already has it
+        if (hasEnchantment(inputStack, enchantment, level)) return;
 
-        if (inputStack.isOf(Items.BOOK)) {
-            ItemStack enchantedBook = new ItemStack(Items.ENCHANTED_BOOK);
-            EnchantedBookItem.addEnchantment(enchantedBook, new EnchantmentLevelEntry(enchantment, level));
-            this.getSlot(0).setStack(enchantedBook);
-        } else if (inputStack.isOf(Items.ENCHANTED_BOOK)) {
-            EnchantedBookItem.addEnchantment(inputStack, new EnchantmentLevelEntry(enchantment, level));
-            this.getSlot(0).setStack(inputStack);
-        } else {
-            inputStack.addEnchantment(enchantment, level);
-            this.getSlot(0).setStack(inputStack);
+        if (this.blockEntity != null) {
+            var selected = new NewEnchantingTableBlockEntity.SelectedEnchantment(enchantment, level);
+            var nearbyCounts = blockEntity.getCachedEnchantments();
+            int cost = blockEntity.getEnchantingCost(selected, nearbyCounts);
+
+            if (player.experienceLevel < cost) return;
+
+            if (inputStack.isOf(Items.BOOK)) {
+                ItemStack enchantedBook = new ItemStack(Items.ENCHANTED_BOOK);
+                EnchantedBookItem.addEnchantment(enchantedBook, new EnchantmentLevelEntry(enchantment, level));
+                this.getSlot(0).setStack(enchantedBook);
+            } else if (inputStack.isOf(Items.ENCHANTED_BOOK)) {
+                EnchantedBookItem.addEnchantment(inputStack, new EnchantmentLevelEntry(enchantment, level));
+                this.getSlot(0).setStack(inputStack);
+            } else {
+                inputStack.addEnchantment(enchantment, level);
+                this.getSlot(0).setStack(inputStack);
+            }
+
+            player.addExperienceLevels(-cost);
+            this.sendContentUpdates();
         }
-
-        this.sendContentUpdates();
     }
 
     @Override

@@ -111,7 +111,7 @@ public class NewEnchantingTableBlockEntity extends BlockEntity implements Extend
     public void tryEnchantItem(PlayerEntity player) {
         ItemStack stack = this.getStack(0);
 
-        if (!stack.isEmpty() && player.experienceLevel >= 30) {
+        if (!stack.isEmpty() && player.experienceLevel >= 20) {
             List<Enchantment> valid;
 
             if (stack.isOf(Items.BOOK)) {
@@ -127,23 +127,37 @@ public class NewEnchantingTableBlockEntity extends BlockEntity implements Extend
             SelectedEnchantment selected = getWeightedRandomEnchantment(valid, bonus, player.getRandom());
 
             if (selected != null) {
-                if (stack.isOf(Items.BOOK)) {
-                    // Replace book with enchanted book
-                    ItemStack newStack = new ItemStack(Items.ENCHANTED_BOOK);
-                    EnchantedBookItem.addEnchantment(newStack, new EnchantmentLevelEntry(selected.enchantment(), selected.level()));
-                    this.setStack(0, newStack);
-                } else {
-                    // Apply enchantment directly to item
-                    Map<Enchantment, Integer> currentEnchants = EnchantmentHelper.get(stack);
-                    int currentLevel = currentEnchants.getOrDefault(selected.enchantment(), 0);
+                int cost = getEnchantingCost(selected, bonus);
+                if (player.experienceLevel >= cost) {
+                    if (stack.isOf(Items.BOOK)) {
+                        // Replace book with enchanted book
+                        ItemStack newStack = new ItemStack(Items.ENCHANTED_BOOK);
+                        EnchantedBookItem.addEnchantment(newStack, new EnchantmentLevelEntry(selected.enchantment(), selected.level()));
+                        this.setStack(0, newStack);
+                    } else {
+                        // Apply enchantment directly to item
+                        Map<Enchantment, Integer> currentEnchants = EnchantmentHelper.get(stack);
+                        int currentLevel = currentEnchants.getOrDefault(selected.enchantment(), 0);
 
-                    if (currentLevel < selected.level()) {
-                        stack.addEnchantment(selected.enchantment(), selected.level());
+                        if (currentLevel < selected.level()) {
+                            stack.addEnchantment(selected.enchantment(), selected.level());
+                        }
                     }
-                }
 
-                player.addExperienceLevels(-30);
+                    player.addExperienceLevels(-cost);
+                }
             }
+        }
+    }
+
+    public int getEnchantingCost(SelectedEnchantment selected, Map<EnchantmentLevel, Integer> bonusCounts) {
+        EnchantmentLevel levelKey = new EnchantmentLevel(selected.enchantment(), selected.level());
+        int count = bonusCounts.getOrDefault(levelKey, 0);
+
+        if (count >= 6) {
+            return 10; // Permanently unlocked, reduced cost
+        } else {
+            return 20 + (count * 2); // Increases up to 30
         }
     }
 
@@ -153,7 +167,7 @@ public class NewEnchantingTableBlockEntity extends BlockEntity implements Extend
             Random random) {
 
         final int baseWeight = 100;
-        final int bonusPerBook = 500;
+        final int bonusPerBook = 165;
 
         List<SelectedEnchantment> weightedList = new ArrayList<>();
 
