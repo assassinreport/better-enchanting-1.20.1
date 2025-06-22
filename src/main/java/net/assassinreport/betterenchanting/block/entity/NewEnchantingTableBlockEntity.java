@@ -166,8 +166,8 @@ public class NewEnchantingTableBlockEntity extends BlockEntity implements Extend
             Map<EnchantmentLevel, Integer> bonusCounts,
             Random random) {
 
-        final int baseWeight = 925;
-        final int bonusPerBook = -165;
+        final int baseWeight = 100;
+        final int bonusPerBook = 165;
 
         List<SelectedEnchantment> weightedList = new ArrayList<>();
 
