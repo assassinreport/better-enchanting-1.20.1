@@ -155,7 +155,7 @@ public class NewEnchantingTableBlockEntity extends BlockEntity implements Extend
         int count = bonusCounts.getOrDefault(levelKey, 0);
 
         if (count >= 6) {
-            return 10; // Permanently unlocked, reduced cost
+            return 0; // Permanently unlocked, reduced cost
         } else {
             return 20 + (count * 2); // Increases up to 30
         }
