@@ -17,6 +17,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -126,6 +128,17 @@ public class NewEnchantingScreenHandler extends ScreenHandler {
 
             player.addExperienceLevels(-cost);
             this.sendContentUpdates();
+
+            if (!player.getWorld().isClient) {
+                player.getWorld().playSound(
+                        null,
+                        blockEntity.getPos(),
+                        SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE,
+                        SoundCategory.BLOCKS,
+                        1.0f,
+                        1.0f
+                );
+            }
         }
     }
 

@@ -21,6 +21,8 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -145,6 +147,17 @@ public class NewEnchantingTableBlockEntity extends BlockEntity implements Extend
                     }
 
                     player.addExperienceLevels(-cost);
+
+                    if (this.world != null && !this.world.isClient) {
+                        this.world.playSound(
+                                null,
+                                this.pos,
+                                SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE,
+                                SoundCategory.BLOCKS,
+                                1.0f,
+                                1.0f
+                        );
+                    }
                 }
             }
         }

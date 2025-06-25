@@ -12,11 +12,15 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
@@ -117,10 +121,33 @@ public class NewChiseledBookshelfBlockEntity extends BlockEntity implements Impl
 
     @Override
     public void setStack(int slot, ItemStack stack) {
+        ItemStack currentStack = this.inventory.get(slot);
+
         if (stack.isIn(ItemTags.BOOKSHELF_BOOKS)) {
             this.inventory.set(slot, stack);
             this.updateState(slot);
             this.markDirty();
+
+            if (world != null && !world.isClient && currentStack.isEmpty() && !stack.isEmpty()) {
+                SoundEvent soundToPlay;
+
+                if (stack.getItem() == Items.ENCHANTED_BOOK) {
+                    soundToPlay = SoundEvents.BLOCK_END_PORTAL_FRAME_FILL;
+                } else if (stack.getItem() == Items.BOOK || stack.getItem() == Items.WRITABLE_BOOK || stack.getItem() == Items.WRITTEN_BOOK) {
+                    soundToPlay = SoundEvents.ITEM_BOOK_PUT;
+                } else {
+                    soundToPlay = SoundEvents.ITEM_BOOK_PUT;
+                }
+
+                world.playSound(
+                        null,
+                        pos,
+                        soundToPlay,
+                        SoundCategory.BLOCKS,
+                        1.0f,
+                        1.0f
+                );
+            }
         }
     }
 
